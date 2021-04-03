@@ -8,13 +8,10 @@ import com.ps.org.ccp.service.CreditCardService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
@@ -27,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CreditCardProcessingApplication.class)
-@AutoConfigureMockMvc
+@AutoConfigureMockMvc(addFilters = false)
 @TestPropertySource(locations = {"classpath:test-application.properties"})
 public class CreditCardProcessingIntegrationTest {
 
