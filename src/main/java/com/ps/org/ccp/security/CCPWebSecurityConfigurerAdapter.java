@@ -1,6 +1,7 @@
 package com.ps.org.ccp.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,11 +18,17 @@ public class CCPWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapte
     @Autowired
     private CCPAuthenticationEntryPoint authenticationEntryPoint;
 
+    @Value("${ccp.authentication.username}")
+    private String userName;
+
+    @Value("${ccp.authentication.password}")
+    private String password;
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("ccpUser")
-                .password(passwordEncoder().encode("ccpPass"))
+                .withUser(userName)
+                .password(passwordEncoder().encode(password))
                 .authorities("ADMIN_ROLE");
     }
 
