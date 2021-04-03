@@ -6,8 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 @RestController
 @AllArgsConstructor
@@ -23,8 +22,8 @@ public class CreditCardController {
     }
 
     @GetMapping(value = "/getAll")
-    public ResponseEntity<List> getAllCreditCards() {
-        return ResponseEntity.ok(creditCardService.getAllCreditCards().orElse(new ArrayList()));
+    public ResponseEntity getAllCreditCards() {
+        return ResponseEntity.ok(creditCardService.getAllCreditCards().orElse(Collections.EMPTY_LIST));
     }
 
 }

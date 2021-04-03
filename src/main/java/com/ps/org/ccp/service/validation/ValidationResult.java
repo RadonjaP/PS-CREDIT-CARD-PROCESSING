@@ -1,4 +1,4 @@
-package com.ps.org.ccp.service;
+package com.ps.org.ccp.service.validation;
 
 import lombok.Builder;
 import lombok.Getter;

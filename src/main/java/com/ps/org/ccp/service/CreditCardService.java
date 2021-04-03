@@ -6,9 +6,12 @@ import com.ps.org.ccp.exceptions.CreditCardDuplicateException;
 import com.ps.org.ccp.exceptions.CreditCardValidationException;
 import com.ps.org.ccp.repository.CreditCardRepository;
 import com.ps.org.ccp.repository.entity.CreditCardEntity;
+import com.ps.org.ccp.service.validation.CreditCardValidator;
+import com.ps.org.ccp.service.validation.ValidationResult;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,9 +38,9 @@ public class CreditCardService {
             CreditCardEntity creditCard = CreditCardMapper.mapCreditCardRequestToEntity.apply(request);
             creditCardRepository.saveAndFlush(creditCard);
 
-        } catch (ConstraintViolationException e) {
-            log.error("Unable to persist data. Credit card number is duplicate.");
-            throw new CreditCardDuplicateException("Unable to persist data. Credit card number is duplicate.", e);
+        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+            log.error("Unable to persist data. Credit card number is duplicate.", e);
+            throw new CreditCardDuplicateException("Unable to persist data. Credit card number is duplicate.");
         }
     }
 

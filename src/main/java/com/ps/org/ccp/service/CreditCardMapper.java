@@ -14,6 +14,7 @@ public class CreditCardMapper {
                 .cardNumber(request.getCardNumber())
                 .name(request.getName())
                 .cardLimit(request.getCardLimit())
+                .balance(0.0)
                 .createdOn(LocalDateTime.now())
                 .lastUpdatedOn(LocalDateTime.now())
                 .build();
