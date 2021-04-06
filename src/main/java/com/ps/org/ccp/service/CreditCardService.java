@@ -14,6 +14,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,7 +36,7 @@ public class CreditCardService {
                 throw new CreditCardValidationException(validationResult);
             }
 
-            CreditCardEntity creditCard = CreditCardMapper.mapCreditCardRequestToEntity.apply(request);
+            CreditCardEntity creditCard = buildCreditCard(request);
             creditCardRepository.saveAndFlush(creditCard);
 
         } catch (ConstraintViolationException | DataIntegrityViolationException e) {
@@ -52,5 +53,16 @@ public class CreditCardService {
                 .collect(Collectors.toList());
 
         return Optional.of(creditCardsResponse);
+    }
+
+    private CreditCardEntity buildCreditCard(final CreditCardRequest request) {
+        return CreditCardEntity.builder()
+                .cardNumber(request.getCardNumber())
+                .name(request.getName())
+                .cardLimit(request.getCardLimit())
+                .balance(0.0)
+                .createdOn(LocalDateTime.now())
+                .lastUpdatedOn(LocalDateTime.now())
+                .build();
     }
 }

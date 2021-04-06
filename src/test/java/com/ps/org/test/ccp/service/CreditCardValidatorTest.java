@@ -71,9 +71,9 @@ public class CreditCardValidatorTest {
 
         Assert.assertFalse(result.isValid());
         Assert.assertEquals(3, result.getErrors().size());
-        Assert.assertEquals("Credit card number must be numeric.", result.getErrors().get(0));
-        Assert.assertEquals("Given credit card number is not in allowed range.", result.getErrors().get(1));
         Assert.assertEquals("Given credit card number is not valid Luhn10 number.", result.getErrors().get(2));
+        Assert.assertEquals("Given credit card number is not in allowed range.", result.getErrors().get(1));
+        Assert.assertEquals("Credit card number must be numeric.", result.getErrors().get(0));
     }
 
 }

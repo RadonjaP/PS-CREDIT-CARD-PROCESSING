@@ -7,23 +7,13 @@ import java.util.*;
 import java.util.function.Predicate;
 
 @Component
-public class CreditCardValidator {
+public class CreditCardValidator extends AbstractCardValidator<CreditCardRequest> {
 
     private static final Integer CREDIT_CARD_MAX_DIGITS = 19;
 
-    public ValidationResult validateRequest(final CreditCardRequest request) {
-        List<String> errors = new ArrayList<>();
-        if (nameIsEmpty.test(request)) errors.add("Name of the card holder should not be empty.");
-        if (ccNumberIsNumeric.negate().test(request)) errors.add("Credit card number must be numeric.");
-        if (ccNumberInRange.negate().test(request)) errors.add("Given credit card number is not in allowed range.");
-        if (numberIsLuhn10.negate().test(request)) errors.add("Given credit card number is not valid Luhn10 number.");
+    private static Predicate<CreditCardRequest> nameIsNotEmpty = request -> request.getName() != null && !"".equals(request.getName());
 
-        return ValidationResult.builder().isValid(errors.isEmpty()).errors(errors).build();
-    }
-
-    private Predicate<CreditCardRequest> nameIsEmpty = (request -> request.getName() == null || "".equals(request.getName()));
-
-    private Predicate<CreditCardRequest> ccNumberIsNumeric = (request) -> {
+    private static Predicate<CreditCardRequest> ccNumberIsNumeric = request -> {
         String cardNumber = request.getCardNumber();
         for (int i = cardNumber.length() - 1; i >= 0; i--) {
             try {
@@ -35,9 +25,9 @@ public class CreditCardValidator {
         return true;
     };
 
-    private Predicate<CreditCardRequest> ccNumberInRange = (request -> request.getCardNumber().length() > 0 && request.getCardNumber().length() <= CREDIT_CARD_MAX_DIGITS);
+    private static Predicate<CreditCardRequest> ccNumberInRange = request -> request.getCardNumber().length() > 0 && request.getCardNumber().length() <= CREDIT_CARD_MAX_DIGITS;
 
-    private Predicate<CreditCardRequest> numberIsLuhn10 = (request) -> {
+    private static Predicate<CreditCardRequest> numberIsLuhn10 = request -> {
         String cardNumber = request.getCardNumber();
         int sum = 0;
         boolean alternate = false;
@@ -57,7 +47,18 @@ public class CreditCardValidator {
             sum += n;
             alternate = !alternate;
         }
-        return (sum % 10 == 0);
+        return sum % 10 == 0;
     };
 
+    private static final List<ValidationRule<CreditCardRequest>> RULES = Arrays.asList(
+            new ValidationRule<>(nameIsNotEmpty, "Name of the card holder should not be empty."),
+            new ValidationRule<>(ccNumberIsNumeric, "Credit card number must be numeric."),
+            new ValidationRule<>(ccNumberInRange, "Given credit card number is not in allowed range."),
+            new ValidationRule<>(numberIsLuhn10, "Given credit card number is not valid Luhn10 number.")
+    );
+
+    @Override
+    protected List<ValidationRule<CreditCardRequest>> getRules() {
+        return RULES;
+    }
 }

@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
@@ -14,18 +13,18 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {CreditCardValidationException.class})
-    protected ResponseEntity<ExceptionHandlerResponse> handleValidationError(CreditCardValidationException exception, WebRequest request) {
+    protected ResponseEntity<ExceptionHandlerResponse> handleValidationError(CreditCardValidationException ex) {
         log.error("Validation errors are present.");
         ExceptionHandlerResponse error = ExceptionHandlerResponse.builder()
                 .message("Validation errors are present.")
-                .errors(exception.getErrors())
+                .errors(ex.getErrors())
                 .build();
         return ResponseEntity.badRequest().body(error);
     }
 
     @ExceptionHandler(value = {CreditCardDuplicateException.class})
-    protected ResponseEntity<ExceptionHandlerResponse> handleDuplicateCardException(CreditCardDuplicateException exception, WebRequest request) {
-        log.error("Duplicate of credit card.", exception);
+    protected ResponseEntity<ExceptionHandlerResponse> handleDuplicateCardException(CreditCardDuplicateException ex) {
+        log.error("Duplicate of credit card.", ex);
         ExceptionHandlerResponse error = ExceptionHandlerResponse.builder()
                 .message("Duplicate of credit card.")
                 .build();
@@ -34,12 +33,13 @@ public class RestResponseExceptionHandler extends ResponseEntityExceptionHandler
     }
 
     @ExceptionHandler(value = {RuntimeException.class})
-    protected ResponseEntity<ExceptionHandlerResponse> handleUnexpectedRuntimeException(RuntimeException exception, WebRequest request) {
-        log.error("Unexpected exception occurred.", exception);
+    protected ResponseEntity<ExceptionHandlerResponse> handleUnexpectedRuntimeException(RuntimeException ex) {
+        log.error("Unexpected exception occurred.", ex);
         ExceptionHandlerResponse error = ExceptionHandlerResponse.builder()
                 .message("Unexpected exception occurred.")
                 .build();
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
+
 
 }
