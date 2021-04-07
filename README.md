@@ -15,3 +15,11 @@ API Access:
     curl -i --user ccpUser:ccpPass http://localhost:8080/credit-cards/getAll
     
   After you get session id you can easily use it to call POST method too.
+  
+  
+  Application Starting:
+  
+    When starting application it is required to add environment variables. These variables represent username and password that will be required to access application. 
+    Properties were externalized because if, for example, we need different login details for different environments. 
+    
+    -DCCP_AUTH_USERNAME=ccpUser -DCCP_AUTH_PASSWORD=ccpPass
